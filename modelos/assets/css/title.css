@@ -1,0 +1,26 @@
+h1 {
+  font-size: 3rem;
+  display: inline-block;
+}
+
+h2 div:first-child {
+  color: #6675aa;
+  margin-right: 1rem;
+}
+
+h2 div:nth-child(2) {
+  color: #6675aa;
+  margin-right: 1rem;
+}
+
+p {
+  font-size: 1.2rem;
+  color: gray;
+  text-transform: uppercase;
+}
+
+.delay-1 {
+  -moz-animation-delay: 1s;
+  -webkit-animation-delay: 1s;
+  animation-delay: 1s;
+}
