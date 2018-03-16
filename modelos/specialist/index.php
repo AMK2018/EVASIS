@@ -259,8 +259,11 @@
                                             </select>
                                         </div>
                                         <div class='field form-actions'>
-                                            <button class="btAsignEva">Asignar Evaluación</button>
+                                            <button class="btAsignEva">Asignar</button>
                                         </div>
+                                        <ul class="evaslist">
+                                        	
+                                        </ul>
                                     </form>
                                 </div>
                             </div>
@@ -404,10 +407,10 @@
 					 	 e.preventDefault();
 	                    var t = $(this).text()
 	                    switch (t) {
-	                        case "Asignar Evaluación":
+	                        case "Asignar":
 	                        	$("#gestionAsign .modal-content form").asignEva("../assets/php/asignEva.php");
 	                        break;
-	                        case "Eliminar Evaluación":
+	                        case "Eliminar":
 	                        	alert("deleted");
 	                        break;
 	                    }

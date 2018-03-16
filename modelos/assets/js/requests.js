@@ -59,6 +59,9 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                         var split = id.split('-');
                         var info = users[split[2]];
 
+                        $("#gestionAsign .modal-content header h2").text("Asignar Evaluación");
+                        $("#gestionAsign .modal-content form button").text("Asignar");
+
                         $(".txtiduser").val(info.id);
                     });
 
@@ -85,9 +88,12 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                         var id = $(this).attr('id');
 
                         var split = id.split('-');
-                        var info = users[split[1]];
+                        var iduser = split[1];
 
-                        $(".slctEva").getUserEvaluations("../php/evas.php", id);
+                        $("#gestionAsign .modal-content header h2").text("Eliminar Evaluación");
+                        $("#gestionAsign .modal-content form button").text("Eliminar");
+
+                        $(".slctEva").getUserEvaluations("../assets/php/getAsigns.php", iduser);
                     });
 
                     var closasign = $('#unasign-' + users[i].id + '-' + i).animatedModal({
@@ -544,11 +550,11 @@ jQuery.fn.getEvaluations = function (path) {
     });
 };
 
-Query.fn.getUserEvaluations = function (path, idUser) {
+jQuery.fn.getUserEvaluations = function (path, idUser) {
     var slctType = $(this);
     var evas = Array();
 
-    $.post(path,{iduser:idUser}, function (data) {
+    $.post(path,{id:idUser}, function (data) {
         if (data.success == "true") {
             for (var i = 0; i < data.stuff.length; i++) {
                 evas[i] = data.stuff[i];
@@ -556,6 +562,8 @@ Query.fn.getUserEvaluations = function (path, idUser) {
         } else {
             if (data.stuff.length > 0) {
                 alert("falla al cargar evaluaciones intenta de nuevo mas tarde...");
+            }else{
+                alert("Este usuario no cuenta con evaluaciones asignadas.");
             }
         }
     }, 'json').done(function () {
@@ -814,7 +822,10 @@ jQuery.fn.asignEva = function (path) {
     }, function (data) {
         if (data.includes("true")) {
             alert("Evaluación asignada correctamente");
-        } else {
+        }else if(data.includes("exists")){
+            alert("No se puede asignar de nuevo esta evaluaciíon a este usuario");
+        }
+         else {
             alert("Hubo un error intente de nuevo mas tarde...");
         }
     }).done(function () {
@@ -848,7 +859,7 @@ jQuery.fn.getUserEva = function (path, iduser, method) {
                 alert("Error intenta de nuevo...");
             }).always(function () {
                 for (var i = 0; i < evas.length; i++) {
-                    tbody.append("<tr><td>" + evas[i].titulo + "</td><td>" + evas[i].num + "</td><td>" + evas[i].tema + "</td><td>" + evas[i].tipo + "</td><td>" + evas[i].date + "</td></tr>");
+                    tbody.append("<tr><td>" + evas[i].titulo + "</td><td>" + evas[i].num + "</td><td>" + evas[i].tema + "</td><td>" + evas[i].tipo + "</td><td>" + evas[i].date + "</td><td>" + evas[i].status + "</td></tr>");
                 }
             });
             break;

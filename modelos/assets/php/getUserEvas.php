@@ -30,6 +30,7 @@
             $stuff['tipo'] = $evaType['tipo'];
 
             $stuff['date'] = $EVA['fecha'];
+            $stuff['status'] = $asign['status'];
             array_push($response["stuff"], $stuff);
         }
 		$response["success"] = "true";

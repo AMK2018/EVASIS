@@ -63,6 +63,7 @@
                             <th>Tema</th>
                             <th>Tipo</th>
                             <th>Fecha de Creación</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>

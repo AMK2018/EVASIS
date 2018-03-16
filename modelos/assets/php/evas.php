@@ -2,11 +2,7 @@
 	require "../../../php/connect.php";
     
     session_start();
-    if(isset($_POST['iduser'])){
-    	$idUser = $_POST['iduser'];
-	}else{
-    	$idUser = $_SESSION['id'];
-	}
+    $idUser = $_SESSION['id'];
 
 	$query = mysqli_query($con, "SELECT * FROM evaluaciones WHERE idOwner = '$idUser'")or die(mysqli_error($con));
 
