@@ -39,7 +39,7 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                             break;
                         case "Especialista":
 
-                            actions = '<tr><td>' + users[i].id + '</td><td><a id="go2profile-' + users[i].id + '-' + i + '" style="cursor:pointer;">' + users[i].name + '</a></td><td>' + users[i].fecha + '</td><td>' + users[i].tipo + '</td><td class="actions"><ul class="icons"><li><a id="asign-' + users[i].id + '-' + i + '" href="#gestionAsign" class="icon fa-tag"><span class="label">Asignar</span></a></li></ul></td></tr>';
+                            actions = '<tr><td>' + users[i].id + '</td><td><a id="go2profile-' + users[i].id + '-' + i + '" style="cursor:pointer;">' + users[i].name + '</a></td><td>' + users[i].fecha + '</td><td>' + users[i].tipo + '</td><td class="actions"><ul class="icons"><li><a id="asign-' + users[i].id + '-' + i + '" href="#gestionAsign" class="icon fa-tag"><span class="label">Asignar</span></a></li><li><a id="unasign-' + users[i].id + '-' + i + '" href="#gestionAsign" class="icon fa-minus"><span class="label">Elminiar</span></a></li></ul></td></tr>';
                             break;
                     }
 
@@ -63,6 +63,34 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                     });
 
                     var closasign = $('#asign-' + users[i].id + '-' + i).animatedModal({
+                        modalTarget: 'gestionAsign',
+                        animatedIn: 'slideInUp',
+                        animatedOut: 'slideOutDown',
+                        color: '#f5fafa',
+                        beforeOpen: function () {
+                            $("#gestionAsign").css("display", "block");
+                        },
+                        afterOpen: function () {
+                            console.log("The animation is completed");
+                        },
+                        beforeClose: function () {
+                            console.log("The animation was called");
+                        },
+                        afterClose: function () {
+                            $("#gestionAsign").css("display", "none");
+                        }
+                    });
+
+                     $(tbody).on('click', '#unasign-' + users[i].id + '-' + i, function () {
+                        var id = $(this).attr('id');
+
+                        var split = id.split('-');
+                        var info = users[split[1]];
+
+                        $(".slctEva").getUserEvaluations("../php/evas.php", id);
+                    });
+
+                    var closasign = $('#unasign-' + users[i].id + '-' + i).animatedModal({
                         modalTarget: 'gestionAsign',
                         animatedIn: 'slideInUp',
                         animatedOut: 'slideOutDown',
@@ -494,6 +522,33 @@ jQuery.fn.getEvaluations = function (path) {
     var evas = Array();
 
     $.get(path, function (data) {
+        if (data.success == "true") {
+            for (var i = 0; i < data.stuff.length; i++) {
+                evas[i] = data.stuff[i];
+            }
+        } else {
+            if (data.stuff.length > 0) {
+                alert("falla al cargar evaluaciones intenta de nuevo mas tarde...");
+            }
+        }
+    }, 'json').done(function () {
+
+    }).fail(function (xhr, status, error) {
+        alert("Error intenta de nuevo...");
+    }).always(function () {
+        slctType.empty();
+        slctType.append($("<option />").text("Evaluacion"));
+        for (var i = 0; i < evas.length; i++) {
+            slctType.append($("<option />").val(evas[i].idEva).text(evas[i].titulo));
+        }
+    });
+};
+
+Query.fn.getUserEvaluations = function (path, idUser) {
+    var slctType = $(this);
+    var evas = Array();
+
+    $.post(path,{iduser:idUser}, function (data) {
         if (data.success == "true") {
             for (var i = 0; i < data.stuff.length; i++) {
                 evas[i] = data.stuff[i];

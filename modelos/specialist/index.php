@@ -392,7 +392,6 @@
 						}
 					});
 
-
 					$("#syncUsers").off("click").on("click", function(e){
 						updateTable("../assets/php/allUsers.php", ".userTable .tbl-content table", ".tbl-content .loader", 1);
 					});
@@ -400,6 +399,19 @@
 					$("#syncEvas").off("click").on("click", function(e){
 						updateTable("../assets/php/getEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2);
 					});
+
+					 $(".btAsignEva").off("click").on("click", function(e){
+					 	 e.preventDefault();
+	                    var t = $(this).text()
+	                    switch (t) {
+	                        case "Asignar Evaluación":
+	                        	$("#gestionAsign .modal-content form").asignEva("../assets/php/asignEva.php");
+	                        break;
+	                        case "Eliminar Evaluación":
+	                        	alert("deleted");
+	                        break;
+	                    }
+                	});
 				});
 
 				$(document).keyup(function(e) {

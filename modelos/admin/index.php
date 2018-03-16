@@ -335,8 +335,10 @@
         <script src="../assets/js/requests.js"></script>
         <script type="text/javascript">
             $(document).ready(function() {
-                updateTable("../assets/php/allUsers.php", ".userTable .tbl-content table", ".userTable .tbl-content .loader", 1);
-                updateTable("../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2);
+                var tipo = '<?php echo $tipo;?>';
+                var id = '<?php echo $_SESSION['id'];?>';
+                updateTable("../assets/php/allUsers.php", ".userTable .tbl-content table", ".userTable .tbl-content .loader", 1, tipo, id);
+                updateTable("../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2, tipo, id);
                 var closevent = $("#add-modal").animatedModal({
                     modalTarget: 'gestion',
                     animatedIn: 'slideInUp',
@@ -411,14 +413,18 @@
 
 
                 $("#syncUsers").off("click").on("click", function(e) {
-                    updateTable("../assets/php/allUsers.php", ".userTable .tbl-content table", ".tbl-content .loader", 1);
+                    updateTable("../assets/php/allUsers.php", ".userTable .tbl-content table", ".tbl-content .loader", 1, tipo, id);
                 });
 
                 $("#syncEvas").off("click").on("click", function(e) {
-                    updateTable("../assets/php/getEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2);
+                    updateTable("../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2, tipo, id);
                 });
                 
                 $(".btAsignEva").off("click").on("click", function(e){
+                    var t = $(this).text()
+                    switch (t) {
+                        case ""
+                    }
                     e.preventDefault();
                      $("#gestionAsign .modal-content form").asignEva("../assets/php/asignEva.php");
                 });
