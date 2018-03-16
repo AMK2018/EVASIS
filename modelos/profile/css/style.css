@@ -51,7 +51,7 @@
 			text-decoration: none;
 		}
 
-	strong, b {
+	strong {
 		color: #787878;
 		font-weight: 400;
 	}
@@ -178,7 +178,7 @@
 	}
 
 	header p {
-		color: #b2b2b2;
+		color: rgba(0, 0, 0, 0.5);
 		position: relative;
 		margin: 0 0 1.5em 0;
 	}
@@ -954,7 +954,7 @@
 		width: 35%;
 	}
 
-		#header strong, #header b {
+		#header strong{
 			color: #ffffff;
 		}
 
@@ -963,7 +963,7 @@
 		}
 
 		#header h1 {
-			color: rgba(255, 255, 255, 0.5);
+			color: rgba(0, 0, 0, 0.5);
 			font-size: 1.35em;
 			line-height: 1.75em;
 			margin: 0;

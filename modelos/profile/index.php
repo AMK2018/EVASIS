@@ -21,7 +21,7 @@
 
 <head>
     <title>
-        <?php echo $name;?>
+        
     </title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="description" content="" />
@@ -44,8 +44,8 @@
     <!-- Header -->
     <header id="header">
         <a href="#" class="image avatar"><img src="images/user-circle-o.svg" alt="" /></a>
-        <h1><strong><?php echo $tipo;?></strong>:
-            <?php echo $name;?><br /></h1>
+        <h1><strong class="user_type"><?php echo $tipo;?></strong>:
+            <b class="user_name"><?php echo $name;?></b><br /></h1>
         <p>Usuario registardo el día <strong class="user_date"></strong></p>
     </header>
 
@@ -96,7 +96,9 @@
             var json = JSON.parse('<?php echo $info;?>');
 
             $(".user_date").text(json.fecha);
-
+            $(".user_type").text(json.tipo);
+            $(".user_name").text(json.name);
+            document.title = json.name;
             $(".image.avatar").hover(function() {
                 $(".image.avatar img").attr("src", "images/user-circle.svg");
             }, function() {
