@@ -181,7 +181,7 @@
 							</header>
 
 							<p>
-								<ul class="icons">
+								<ul class="icons actions">
 									<li>
 										<a id="add-modal" href="#gestion" class="icon fa-plus"><span class="label">Agregar usuario</span></a>
 									</li>

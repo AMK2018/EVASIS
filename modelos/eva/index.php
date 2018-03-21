@@ -53,9 +53,9 @@
     </div>
 
     <div class="reveal">
-        <div class="slides">
+        <form class="slides">
 
-        </div>
+        </form>
     </div>
 
     <!--modalContent -->
@@ -92,6 +92,9 @@
         $(document).ready(function() {
             //get the information from the evaluation
             var json = JSON.parse('<?php echo $info;?>');
+            
+           
+            getQtns("php/qtns.php", json.theme);
 
             //create slides about the question from eva info
             $(".slides").empty();
@@ -108,149 +111,178 @@
 
             $(".lblTitle").text(json.title);
             $(".lblDate").text(json.date);
-            $(".lblNum").text(json.num);
             $(".lblTheme").text(json.theme);
             $(".lblType").text(json.type);
 
-            for (var i = 0; i < json.num; i++) {
-                $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></section>');
-            }
 
-            $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><buuton id="stopEvaRec">Salir</button></section>');
-
-            Reveal.initialize({
-                controls: true,
-                progress: true,
-                history: true,
-                center: true,
-
-                transition: 'fade',
-
-                dependencies: [{
-                        src: '../assets/lib/js/classList.js',
-                        condition: function() {
-                            return !document.body.classList;
-                        }
-                    },
-                    {
-                        src: '../assets/plugin/markdown/marked.js',
-                        condition: function() {
-                            return !!document.querySelector('[data-markdown]');
-                        }
-                    },
-                    {
-                        src: '../assets/plugin/markdown/markdown.js',
-                        condition: function() {
-                            return !!document.querySelector('[data-markdown]');
-                        }
-                    },
-                    {
-                        src: '../assets/plugin/highlight/highlight.js',
-                        async: true,
-                        callback: function() {
-                            hljs.initHighlightingOnLoad();
-                        }
-                    },
-                    {
-                        src: '../assets/plugin/search/search.js',
-                        async: true
-                    },
-                    {
-                        src: '../assets/plugin/zoom-js/zoom.js',
-                        async: true
-                    },
-                    {
-                        src: '../assets/plugin/notes/notes.js',
-                        async: true
-                    }
-                ]
-            });
-
-
-            //video recorder
-            function captureUserMedia(mediaConstraints, successCallback, errorCallback) {
-                navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
-            }
-            var mediaConstraints = {
-                audio: !IsOpera && !IsEdge, // record both audio/video in Firefox/Chrome
-                video: true
-            };
-
-            var videosContainer = document.getElementById('video-container');
-            var index = 1;
-            var mediaRecorder, mediaStream;
-
-
-            function onMediaSuccess(stream) {
-                var video = document.querySelector('#video');
-                video = mergeProps(video, {
-                    controls: false,
-                    muted: true
-                });
-                video.srcObject = stream;
-                mediaStream = stream;
-                video.play();
-                mediaRecorder = new MediaStreamRecorder(stream);
-                mediaRecorder.mimeType = 'video/webm';
-                mediaRecorder.ondataavailable = function(blob) {
-                    uploadToPHPServer(blob);
-                };
-                mediaRecorder.start();
-            }
-
-            function onMediaError(e) {
-                console.log('media error', e);
-            }
-
-            function uploadToPHPServer(blob) {
-                var file = new File([blob], 'msr-' + (new Date).toISOString().replace(/:|\./g, '-') + '.webm', {
-                    type: 'video/webm'
-                });
-
-                // create FormData
-                var formData = new FormData();
-                formData.append('video-filename', file.name);
-                formData.append('video-blob', file);
-
-                makeXMLHttpRequest('php/upload.php', formData, function() {
-                    window.close();
-                });
-            }
-
-            function makeXMLHttpRequest(url, data, callback) {
-                var request = new XMLHttpRequest();
-                request.onreadystatechange = function() {
-                    if (request.readyState == 4 && request.status == 200) {
-                        callback();
-                    }
-                };
-                request.open('POST', url);
-                request.send(data);
-            }
-
-            document.querySelector('#startEvaRec').onclick = function() {
-                this.disabled = true;
-                captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
-                $("#modal").removeClass("zoomIn");
-                $("#modal").addClass("zoomOut");
-                $("#modal").hide();
-            };
-
-            document.querySelector('#stopEvaRec').onclick = function() {
-                this.disabled = true;
-                console.log('Just stopped the recording');
-                mediaStream.getVideoTracks()[0].stop();
-                mediaRecorder.stop();
-                $(".controls").hide();
-                //window.close();
-            };
-
-            window.onbeforeunload = function() {
-                document.querySelector('#start-recording').disabled = false;
-            };
-
+           
 
             //modal content
+
+            //call questions
+            function getQtns(path, tema){
+                var questions;
+                $.get(path,{theme:tema}, function (data) {
+                    if (data.success == "true") {
+                       questions = data.stuff;
+                    } else {
+                        alert("falla al cargar datos intenta de nuevo mas tarde...");
+                    }
+                }, 'json').done(function () {
+
+                }).fail(function (xhr, status, error) {
+                    alert("Error intenta de nuevo...");
+                }).always(function () {
+                    if(json.num < questions.length){
+                        $(".lblNum").text(json.num);
+                        for (var i = 0; i < json.num; i++) {
+                            var pregunta = questions[i].pregunta;
+                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</section>');
+                        }
+                    }else{
+                        $(".lblNum").text(questions.length);
+                        for (var i = 0; i < questions.length; i++) {
+                            var pregunta = questions[i].pregunta;
+                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'/>"</section>');
+                        }
+                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><buuton id="stopEvaRec">Salir</button></section>');
+
+                        Reveal.initialize({
+                            controls: true,
+                            progress: true,
+                            history: true,
+                            center: true,
+
+                            transition: 'fade',
+
+                            dependencies: [{
+                                    src: '../assets/lib/js/classList.js',
+                                    condition: function() {
+                                        return !document.body.classList;
+                                    }
+                                },
+                                {
+                                    src: '../assets/plugin/markdown/marked.js',
+                                    condition: function() {
+                                        return !!document.querySelector('[data-markdown]');
+                                    }
+                                },
+                                {
+                                    src: '../assets/plugin/markdown/markdown.js',
+                                    condition: function() {
+                                        return !!document.querySelector('[data-markdown]');
+                                    }
+                                },
+                                {
+                                    src: '../assets/plugin/highlight/highlight.js',
+                                    async: true,
+                                    callback: function() {
+                                        hljs.initHighlightingOnLoad();
+                                    }
+                                },
+                                {
+                                    src: '../assets/plugin/search/search.js',
+                                    async: true
+                                },
+                                {
+                                    src: '../assets/plugin/zoom-js/zoom.js',
+                                    async: true
+                                },
+                                {
+                                    src: '../assets/plugin/notes/notes.js',
+                                    async: true
+                                }
+                            ]
+                        });
+
+                        initVideoRecorder();
+                    }
+                });
+            }
+
+            function initVideoRecorder(){
+                 //video recorder
+                function captureUserMedia(mediaConstraints, successCallback, errorCallback) {
+                    navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
+                }
+                var mediaConstraints = {
+                    audio: !IsOpera && !IsEdge, // record both audio/video in Firefox/Chrome
+                    video: true
+                };
+
+                var videosContainer = document.getElementById('video-container');
+                var index = 1;
+                var mediaRecorder, mediaStream;
+
+
+                function onMediaSuccess(stream) {
+                    var video = document.querySelector('#video');
+                    video = mergeProps(video, {
+                        controls: false,
+                        muted: true
+                    });
+                    video.srcObject = stream;
+                    mediaStream = stream;
+                    video.play();
+                    mediaRecorder = new MediaStreamRecorder(stream);
+                    mediaRecorder.mimeType = 'video/webm';
+                    mediaRecorder.ondataavailable = function(blob) {
+                        uploadToPHPServer(blob);
+                    };
+                    mediaRecorder.start();
+                }
+
+                function onMediaError(e) {
+                    console.log('media error', e);
+                }
+
+                function uploadToPHPServer(blob) {
+                    var file = new File([blob], 'msr-' + (new Date).toISOString().replace(/:|\./g, '-') + '.webm', {
+                        type: 'video/webm'
+                    });
+
+                    // create FormData
+                    var formData = new FormData();
+                    formData.append('video-filename', file.name);
+                    formData.append('video-blob', file);
+
+                    makeXMLHttpRequest('php/upload.php', formData, function() {
+                        window.close();
+                    });
+                }
+
+                function makeXMLHttpRequest(url, data, callback) {
+                    var request = new XMLHttpRequest();
+                    request.onreadystatechange = function() {
+                        if (request.readyState == 4 && request.status == 200) {
+                            callback();
+                        }
+                    };
+                    request.open('POST', url);
+                    request.send(data);
+                }
+
+                document.querySelector('#startEvaRec').onclick = function() {
+                    this.disabled = true;
+                    captureUserMedia(mediaConstraints, onMediaSuccess, onMediaError);
+                    $("#modal").removeClass("zoomIn");
+                    $("#modal").addClass("zoomOut");
+                    $("#modal").hide();
+                };
+
+                document.querySelector('#stopEvaRec').onclick = function() {
+                    this.disabled = true;
+                    console.log('Just stopped the recording');
+                    mediaStream.getVideoTracks()[0].stop();
+                    mediaRecorder.stop();
+                    $(".controls").hide();
+                    //window.close();
+                };
+
+                window.onbeforeunload = function() {
+                    document.querySelector('#start-recording').disabled = false;
+                };
+            }
         });
     </script>
 </body>

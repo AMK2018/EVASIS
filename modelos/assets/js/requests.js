@@ -39,6 +39,8 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                             break;
                         case "Especialista":
 
+                            $("#usuarios .container .actions").remove();
+
                             actions = '<tr><td>' + users[i].id + '</td><td><a id="go2profile-' + users[i].id + '-' + i + '" style="cursor:pointer;">' + users[i].name + '</a></td><td>' + users[i].fecha + '</td><td>' + users[i].tipo + '</td><td class="actions"><ul class="icons"><li><a id="asign-' + users[i].id + '-' + i + '" href="#gestionAsign" class="icon fa-tag"><span class="label">Asignar</span></a></li><li><a id="unasign-' + users[i].id + '-' + i + '" href="#gestionAsign" class="icon fa-minus"><span class="label">Elminiar</span></a></li></ul></td></tr>';
                             break;
                     }
@@ -292,7 +294,7 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                         var split = id.split('-');
                         var info = users[split[2]];
                         var json = JSON.stringify(info);
-                        openPopupPage("../../eva/index.php", json);
+                        openPopupPage("../eva/index.php", json);
                     });
                     break;
                 case 3:
