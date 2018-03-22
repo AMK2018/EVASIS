@@ -5,7 +5,8 @@
 	   $info = $_POST['info'];
         if(isset($_SESSION['username']) || isset($_SESSION['tipo'])){
 		  $name = $_SESSION['username'];
-		  $tipo = $_SESSION['tipo'];			
+          $tipo = $_SESSION['tipo'];		
+          $id = $_SESSION['id'];	
         }else{
             echo '<script>alert("No puedes realizar una evaluación sin haberte logueado");
             window.close();</script>';
@@ -29,6 +30,7 @@
     <link rel="stylesheet" href="../assets/css/reveal.css">
     <link rel="stylesheet" href="../assets/css/theme/moon.css">
     <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/form.css">
     <style type="text/css">
         #video-container {
             position: absolute;
@@ -76,7 +78,7 @@
                 </li>
             </ol>
             <p>
-                <button id="startEvaRec">Continuar</button>
+                <button id="startEvaRec" style="cursor:pointer;">Continuar</button>
             </p>
         </div>
     </div>
@@ -85,6 +87,7 @@
     <script src="../assets/lib/js/head.min.js"></script>
     <script src="../assets/js/reveal.js"></script>
     <script src="../../js/animatedModal.js"></script>
+    <script src="../assets/js/requests.js"></script>
     <script src="https://www.webrtc-experiment.com/MediaStreamRecorder.js">
     </script>
 
@@ -115,17 +118,14 @@
             $(".lblType").text(json.type);
 
 
-           
-
-            //modal content
-
+        
             //call questions
             function getQtns(path, tema){
                 var questions;
                 $.get(path,{theme:tema}, function (data) {
-                    if (data.success == "true") {
+                    if (data.status.includes('true')) {
                        questions = data.stuff;
-                    } else {
+                    }else {
                         alert("falla al cargar datos intenta de nuevo mas tarde...");
                     }
                 }, 'json').done(function () {
@@ -143,9 +143,9 @@
                         $(".lblNum").text(questions.length);
                         for (var i = 0; i < questions.length; i++) {
                             var pregunta = questions[i].pregunta;
-                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'/>"</section>');
+                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'"/></section>');
                         }
-                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><buuton id="stopEvaRec">Salir</button></section>');
+                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
 
                         Reveal.initialize({
                             controls: true,
@@ -195,12 +195,13 @@
                             ]
                         });
 
-                        initVideoRecorder();
+                        initVideoRecorder(questions);
                     }
                 });
             }
-
-            function initVideoRecorder(){
+            
+            //record video functions
+            function initVideoRecorder(questions){
                  //video recorder
                 function captureUserMedia(mediaConstraints, successCallback, errorCallback) {
                     navigator.mediaDevices.getUserMedia(mediaConstraints).then(successCallback).catch(errorCallback);
@@ -213,7 +214,6 @@
                 var videosContainer = document.getElementById('video-container');
                 var index = 1;
                 var mediaRecorder, mediaStream;
-
 
                 function onMediaSuccess(stream) {
                     var video = document.querySelector('#video');
@@ -237,7 +237,8 @@
                 }
 
                 function uploadToPHPServer(blob) {
-                    var file = new File([blob], 'msr-' + (new Date).toISOString().replace(/:|\./g, '-') + '.webm', {
+                    var name = "<?php echo $name; ?>";
+                    var file = new File([blob],  name +'-' + (new Date).toISOString().replace(/:|\./g, '-') + '.webm', {
                         type: 'video/webm'
                     });
 
@@ -245,9 +246,22 @@
                     var formData = new FormData();
                     formData.append('video-filename', file.name);
                     formData.append('video-blob', file);
+                    
+                    var score = checkQuestions(questions);
+                    var idUser = "<?php echo $id; ?>";
 
-                    makeXMLHttpRequest('php/upload.php', formData, function() {
-                        window.close();
+                    formData.append('score', score);
+                    formData.append('ideva', json.idEva);
+                    formData.append('iduser', idUser);
+
+                    makeXMLHttpRequest('php/scores.php', formData, function() {
+                        if(data.status.includes('true')){
+                            
+                        }else if(data.status.includes('no-asigned')){
+                            alert("Esta evaluación no ha sido asignada a este usuario, los datos no se guardaran");
+                        }else{
+                            alert("falla al enviar datos intenta de nuevo mas tarde...");
+                        }
                     });
                 }
 
@@ -255,11 +269,28 @@
                     var request = new XMLHttpRequest();
                     request.onreadystatechange = function() {
                         if (request.readyState == 4 && request.status == 200) {
-                            callback();
+                            if( typeof callback === 'function' ){
+                                callback(request.responseText);
+                            }
                         }
                     };
                     request.open('POST', url);
                     request.send(data);
+                }
+
+                var checkQuestions = function(qtns){
+                    var formarray = $(".reveal .slides").serializeArray();
+                    var score = 0;
+                    $.map(formarray,  function (val, index) {  
+                        var answ = qtns[index].respuesta;
+                        var v = val.value;
+                        if(v == answ){
+                            score++;
+                        }
+                    });
+                    var qtnsNums = $(".lblNum").text();
+                    
+                    return (score * 100)/qtnsNums;
                 }
 
                 document.querySelector('#startEvaRec').onclick = function() {

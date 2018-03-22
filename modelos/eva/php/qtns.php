@@ -30,14 +30,14 @@
                 array_push($response["stuff"], $stuff);
             }
 
-            $response["success"] = "true";
+            $response["status"] = "true";
 		    echo(json_encode($response));
         }else{
-            $response["success"] = "false";
+            $response["status"] = "false";
             $response["msg"] = "No hay preguntas para este tema";
         }
 	}else{
-        $response["success"] = "false";
+        $response["status"] = "false";
         $response["msg"] = "Tema inexistente";
 		echo(json_encode($response));
 	}	
