@@ -8,11 +8,11 @@
 		  $name = $_SESSION['username'];
 		  $tipo = $_SESSION['tipo'];			
         }else{
-            echo '<script>alert("No puedes realizar una evaluación sin haberte logueado");
+            echo '<script>
             window.close();</script>';
         }
     }else{
-        echo '<script>alert("No puedes realizar una evaluación sin haberte logueado");
+        echo '<script>
         window.close();</script>';
     }
 ?>
@@ -26,6 +26,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="description" content="" />
     <meta name="keywords" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
     <script src="js/jquery.min.js"></script>
     <script src="js/jquery.poptrox.min.js"></script>
@@ -37,13 +38,15 @@
         <link rel="stylesheet" href="css/style-xlarge.css" />
     </noscript>
     <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 </head>
 
 <body id="top">
 
     <!-- Header -->
     <header id="header">
-        <a href="#" class="image avatar"><img src="images/user-circle-o.svg" alt="" /></a>
+        <a id="btvideo" href="#overview" class="image avatar"><img src="images/user-circle-o.svg" alt="" /></a>
         <h1><strong class="user_type"><?php echo $tipo;?></strong>:
             <b class="user_name"><?php echo $name;?></b><br /></h1>
         <p>Usuario registardo el día <strong class="user_date"></strong></p>
@@ -64,12 +67,35 @@
                             <th>Tipo</th>
                             <th>Fecha de Creación</th>
                             <th>Status</th>
+                            <th>Score</th>
                         </tr>
                     </thead>
                     <tbody>
                         
                     </tbody>
                 </table>
+            </div>
+
+            <div id="overview">
+                <!--THIS IS IMPORTANT! to close the modal, the class name has to match the name given on the ID  class="close-animatedModal" -->
+                <div id="btn-close-modal" class="close-overview">
+                    <ul class="icons">
+                        <li>
+                            <a class="icon fa-close"><span class="label">Close</span></a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-content">
+                    <header>
+                        <h2>Ver Evaluación</h2>
+                    </header>
+                    <div class="video-container">
+                        <video width="400" controls donwload="false">
+                            <source src='' type="video/webm">
+                            Your browser does not support HTML5 video.
+                        </video>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -89,6 +115,7 @@
     </footer>
 
     <script src="../assets/js/jquery.min.js"></script>
+    <script src="../../js/animatedModal.js"></script>
     <script src="../assets/js/requests.js"></script>
     <script>
         $(document).ready(function() {

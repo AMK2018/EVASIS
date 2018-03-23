@@ -17,6 +17,7 @@
             $EVA = mysqli_fetch_array($qe);
 
             $stuff["titulo"] = $EVA['titulo'];
+            $stuff['idEva'] = $idEva;
             $stuff["num"] = $EVA['num_preguntas'];
             $idTema = $EVA['idTema'];
             $idTipo = $EVA['idTipo'];
@@ -30,7 +31,9 @@
             $stuff['tipo'] = $evaType['tipo'];
 
             $stuff['date'] = $EVA['fecha'];
+            $stuff['score'] = $asign['score'];
             $stuff['status'] = $asign['status'];
+            $stuff['media'] = $asign['media'];
             array_push($response["stuff"], $stuff);
         }
 		$response["success"] = "true";

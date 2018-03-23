@@ -306,7 +306,7 @@
                         <div class="loader">
                             <img src="../images/loading.svg">
                         </div>
-                    </di                                                                                                                                   mm,.v>
+                    </div>
                 </div>
             </div>
             </section>

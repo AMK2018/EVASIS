@@ -133,7 +133,7 @@
                             
                             var media = data.stuff.media.replace('../','');
                             $(".slides").append("<section><h2>Puntaje</h2></br><p>Score: " +data.stuff.score+"%</p></section>");
-                            $(".slides").append("<section><h2>Comprobante</h2></br><p><video width='400' controls><source src="+media+" type='video/webm'>Your browser does not support HTML5 video.</video></p></section>");
+                            $(".slides").append("<section data-background-video="+media+"><h2>Comprobante</h2></section>");
                             intiSlides();
                         }
                     }else {

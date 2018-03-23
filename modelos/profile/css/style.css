@@ -739,7 +739,22 @@
 			}
 
 		table td {
-			padding: 0.75em 0.75em;
+			padding: 0.75em 0.40em;
+			text-align: center;
+			cursor: pointer;
+		}
+
+		table td ul{
+			list-style: none;
+		}
+
+		table td a{
+			color:gray;
+			font-size: 1.5em;
+		}
+
+		table td:hover a{
+			color:#49bf9d;
 		}
 
 		table th {
@@ -747,7 +762,7 @@
 			font-size: 0.9em;
 			font-weight: 400;
 			padding: 0 0.75em 0.75em 0.75em;
-			text-align: left;
+			text-align: center;
 		}
 
 		table thead {
@@ -1040,6 +1055,55 @@
 				padding-top: 0;
 			}
 
+		#main #overview{
+			
+		}
+
+		#main #overview .modal-content{
+			width: 100%;
+			height: 70vh;
+			display: flex !important;
+			align-items: center;
+			justify-content: center;
+		}
+
+		#main #overview .modal-content header{
+			position: absolute;
+			top: 60px;
+			font-size: 2em;
+		}
+
+		#main #overview .modal-content header h2{
+			color:#49bf9d;
+		}
+
+		#main #overview .modal-content .video-container{
+			width: 100%;
+			height: auto;
+			display: flex !important;
+			align-items: center;
+			justify-content: center;
+		}
+
+		#main #overview .modal-content .video-container video{
+			width: 40%;
+			margin-top: 150px;
+		}
+
+		#main #overview #btn-close-modal {
+			width:100%;
+			text-align: right;
+		}
+
+		#main #overview #btn-close-modal ul{
+			padding-right: 30px;
+			padding-top: 20px;
+		}
+
+		#main #overview #btn-close-modal ul li a{
+			color: gray;
+			cursor:pointer;
+		}
 /* Poptrox */
 	@-moz-keyframes spin { 0% { -moz-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -ms-transform: rotate(0deg); transform: rotate(0deg); } 100% { -moz-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg); } }
 	@-webkit-keyframes spin { 0% { -moz-transform: rotate(0deg); -webkit-transform: rotate(0deg); -o-transform: rotate(0deg); -ms-transform: rotate(0deg); transform: rotate(0deg); } 100% { -moz-transform: rotate(360deg); -webkit-transform: rotate(360deg); -o-transform: rotate(360deg); -ms-transform: rotate(360deg); transform: rotate(360deg); } }

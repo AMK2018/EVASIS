@@ -860,8 +860,46 @@ jQuery.fn.getUserEva = function (path, iduser, method) {
             }).fail(function (xhr, status, error) {
                 alert("Error intenta de nuevo...");
             }).always(function () {
+                var linkaction = "";
                 for (var i = 0; i < evas.length; i++) {
-                    tbody.append("<tr><td>" + evas[i].titulo + "</td><td>" + evas[i].num + "</td><td>" + evas[i].tema + "</td><td>" + evas[i].tipo + "</td><td>" + evas[i].date + "</td><td>" + evas[i].status + "</td></tr>");
+
+                    var score = "";
+                    if( evas[i].score != ""){
+                        score = evas[i].score + "%";
+                    }
+
+                    if(evas[i].media != ""){
+                        linkaction = "<a id='open-"+evas[i].idEva+"' href='#overview' data-media='"+evas[i].media+"'><i class='fas fa-file-video'/></a>";
+                    }
+
+                    tbody.append("<tr><td>" + evas[i].titulo + "</td><td>" + evas[i].num + "</td><td>" + evas[i].tema + "</td><td>" + evas[i].tipo + "</td><td>" + evas[i].date + "</td><td>" + evas[i].status +"</br>"+ linkaction +"</td><td>" + score+"</td></tr>");
+
+                    $(document).on('click', '#open-' + evas[i].idEva, function () {
+                        var media = $(this).data('media');
+                        if(media != ""){
+                            media = media.replace('../' , '');
+                            $("#overview .modal-content .video-container video").attr("src",media);
+                        }
+                    });
+
+                    var modal = $("#open-"+ evas[i].idEva).animatedModal({
+                        modalTarget: 'overview',
+                        animatedIn: 'slideInUp',
+                        animatedOut: 'slideOutDown',
+                        color: '#f5fafa',
+                        beforeOpen: function() {
+                            $("#overview").css("display", "block");
+                        },
+                        afterOpen: function() {
+                            console.log("The animation is completed");
+                        },
+                        beforeClose: function() {
+                            console.log("The animation was called");
+                        },
+                        afterClose: function() {
+                            $("#overview").css("display", "none");
+                        }
+                    });
                 }
             });
             break;
