@@ -884,12 +884,27 @@ jQuery.fn.getUserEva = function (path, iduser, method) {
             }).always(function () {
 
                 for (var i = 0; i < evas.length; i++) {
+                    var score = evas[i].score;
+                    if(score == ""){
+                        score="";
+                    }else{
+                        score+="%";
+                    }
+                    var video = evas[i].media;
+                    var media;
+                    if(video == ""){
+                        media = "";
+                    }else{
+                        video = video.replace('../', '');
+                        media = '<video width="400" controls><source src='+ video +' type="video/webm">Your browser does not support HTML5 video.</video>';
+                    }
+                   
                     var options = {
                         valueNames: [
                             'titulo',
                             'fecha'
                         ],
-                        item: '<li class="eva-' + evas[i].idEva + '-' + i + '"><div><h3 class="titulo"></h3><p class="fecha"></p></div><div><i class="fas fa-caret-square-right"></i></div></li>'
+                        item: '<li class="eva-' + evas[i].idEva + '-' + i + '"><div><h3 class="titulo"></h3><p class="fecha"></p></div><div><h3 class="score">'+score+'</h3><i class="fas fa-caret-square-right"></i>'+media+'</div></li>'
                     };
 
                     var evasList = new List(list, options);

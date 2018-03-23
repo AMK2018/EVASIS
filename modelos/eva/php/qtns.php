@@ -31,7 +31,6 @@
             }
 
             $response["status"] = "true";
-		    echo(json_encode($response));
         }else{
             $response["status"] = "false";
             $response["msg"] = "No hay preguntas para este tema";
@@ -39,6 +38,8 @@
 	}else{
         $response["status"] = "false";
         $response["msg"] = "Tema inexistente";
-		echo(json_encode($response));
-	}	
+    }	
+    
+    
+	echo(json_encode($response));
 ?>

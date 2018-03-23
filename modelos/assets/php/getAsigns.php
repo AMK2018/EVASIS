@@ -8,16 +8,18 @@
     
     $response["stuff"] = array();
 	$count = mysqli_num_rows($query);
-
+    
 	if($count > 0){
-        while($user = mysqli_fetch_array($query)){
-            
+        while($user = mysqli_fetch_array($query)){  
+            $stuff = array();
             $idEva = $user['idEvaluacion'];
             $stuff["asign-date"] = fechaCastellano($user['fecha_asign']);
+            $stuff['score'] = $user['score'];
             $stuff["status"] = $user['status'];
-            
-            $query = mysqli_query($con, "SELECT * FROM evaluaciones WHERE idEvaluacion = $idEva")or die(mysqli_error($con));
-            $eva = mysqli_fetch_array($query);
+            $stuff['media'] = $user['media'];
+
+            $query2 = mysqli_query($con, "SELECT * FROM evaluaciones WHERE idEvaluacion = $idEva")or die(mysqli_error($con));
+            $eva = mysqli_fetch_array($query2);
             
             $stuff['idEva'] = $idEva;
             $stuff ['titulo'] = $eva['titulo'];
@@ -39,9 +41,9 @@
             array_push($response["stuff"], $stuff);
         }
         $response["success"] = "true";
-        echo(json_encode($response));
     }else{
         $response["success"] = "false";
-		echo(json_encode($response));
     }
+
+	echo(json_encode($response));
 ?>

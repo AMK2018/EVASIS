@@ -96,9 +96,6 @@
             //get the information from the evaluation
             var json = JSON.parse('<?php echo $info;?>');
             
-           
-            getQtns("php/qtns.php", json.theme);
-
             //create slides about the question from eva info
             $(".slides").empty();
             $(".slides").append(
@@ -112,13 +109,68 @@
                 "</ul>" +
                 "</section>");
 
-            $(".lblTitle").text(json.title);
+            $(".lblTitle").text(json.titulo);
             $(".lblDate").text(json.date);
             $(".lblTheme").text(json.theme);
             $(".lblType").text(json.type);
 
+            var idUser = "<?php echo $id; ?>";
+            var idEva = json.idEva;
+            var date = json['asign-date'];
+            
+            date = myDate(date);
+            
+            if(date != null){
+                $.post("php/check.php",{iduser:idUser, ideva:idEva, date:date}, function (data) {
+                    if (data.status.includes('true')) {
+                        if(data.stuff.status == "Incomplete"){
+                            getQtns("php/qtns.php", json.theme);
+                        }else{
+                            $("#modal").removeClass("zoomIn");
+                            $("#modal").addClass("zoomOut");
+                            $("#modal").remove();
+                            $("#video-container").remove();
+                            
+                            var media = data.stuff.media.replace('../','');
+                            $(".slides").append("<section><h2>Puntaje</h2></br><p>Score: " +data.stuff.score+"%</p></section>");
+                            $(".slides").append("<section><h2>Comprobante</h2></br><p><video width='400' controls><source src="+media+" type='video/webm'>Your browser does not support HTML5 video.</video></p></section>");
+                            intiSlides();
+                        }
+                    }else {
+                        alert("falla al confirmar datos intenta de nuevo mas tarde...");
+                    }
+                }, 'json').done(function () {
 
-        
+                }).fail(function (xhr, status, error) {
+                    alert("Error intenta de nuevo...");
+                }).always(function () {
+                    myDate(date, "YYMMDD");
+                });
+            }
+
+            function myDate(mydate){
+                mydate = mydate.replace(/de/g, '');
+                var months = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+                
+                var split = mydate.split('  ');
+                
+                if(split.length > 1){
+                    var m;
+                    for(var i = 0; i < months.length; i++){
+                        if(split[1].toUpperCase() == months[i]){
+                            m = i + 1;
+                            if(m.toString().length <= 1){
+                                m = "0"+m;
+                            }
+                        }
+                    }
+                
+                    var newDate = split[2] + "-" + m + "-" + split[0];
+                    return newDate;
+                }
+                return null;
+            }
+
             //call questions
             function getQtns(path, tema){
                 var questions;
@@ -126,76 +178,32 @@
                     if (data.status.includes('true')) {
                        questions = data.stuff;
                     }else {
-                        alert("falla al cargar datos intenta de nuevo mas tarde...");
+                        alert(data.msg);
                     }
                 }, 'json').done(function () {
 
                 }).fail(function (xhr, status, error) {
                     alert("Error intenta de nuevo...");
                 }).always(function () {
-                    if(json.num < questions.length){
-                        $(".lblNum").text(json.num);
-                        for (var i = 0; i < json.num; i++) {
-                            var pregunta = questions[i].pregunta;
-                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</section>');
+                    if(questions != undefined ){
+                        if(json.num < questions.length){
+                            $(".lblNum").text(json.num);
+                            for (var i = 0; i < json.num; i++) {
+                                var pregunta = questions[i].pregunta;
+                                $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</section>');
+                            }
+                        }else{
+                            $(".lblNum").text(questions.length);
+                            for (var i = 0; i < questions.length; i++) {
+                                var pregunta = questions[i].pregunta;
+                                $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'"/></section>');
+                            }
+                            $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
+                            
+                            intiSlides();
+
+                            initVideoRecorder(questions);
                         }
-                    }else{
-                        $(".lblNum").text(questions.length);
-                        for (var i = 0; i < questions.length; i++) {
-                            var pregunta = questions[i].pregunta;
-                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'"/></section>');
-                        }
-                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
-
-                        Reveal.initialize({
-                            controls: true,
-                            progress: true,
-                            history: true,
-                            center: true,
-
-                            transition: 'fade',
-
-                            dependencies: [{
-                                    src: '../assets/lib/js/classList.js',
-                                    condition: function() {
-                                        return !document.body.classList;
-                                    }
-                                },
-                                {
-                                    src: '../assets/plugin/markdown/marked.js',
-                                    condition: function() {
-                                        return !!document.querySelector('[data-markdown]');
-                                    }
-                                },
-                                {
-                                    src: '../assets/plugin/markdown/markdown.js',
-                                    condition: function() {
-                                        return !!document.querySelector('[data-markdown]');
-                                    }
-                                },
-                                {
-                                    src: '../assets/plugin/highlight/highlight.js',
-                                    async: true,
-                                    callback: function() {
-                                        hljs.initHighlightingOnLoad();
-                                    }
-                                },
-                                {
-                                    src: '../assets/plugin/search/search.js',
-                                    async: true
-                                },
-                                {
-                                    src: '../assets/plugin/zoom-js/zoom.js',
-                                    async: true
-                                },
-                                {
-                                    src: '../assets/plugin/notes/notes.js',
-                                    async: true
-                                }
-                            ]
-                        });
-
-                        initVideoRecorder(questions);
                     }
                 });
             }
@@ -238,6 +246,7 @@
 
                 function uploadToPHPServer(blob) {
                     var name = "<?php echo $name; ?>";
+                    name = name.replace(/ /g,'_');
                     var file = new File([blob],  name +'-' + (new Date).toISOString().replace(/:|\./g, '-') + '.webm', {
                         type: 'video/webm'
                     });
@@ -248,13 +257,15 @@
                     formData.append('video-blob', file);
                     
                     var score = checkQuestions(questions);
-                    var idUser = "<?php echo $id; ?>";
 
                     formData.append('score', score);
                     formData.append('ideva', json.idEva);
                     formData.append('iduser', idUser);
 
-                    makeXMLHttpRequest('php/scores.php', formData, function() {
+                    var date = myDate(json['asign-date']);
+                    formData.append('date', date);
+
+                    makeXMLHttpRequest('php/scores.php', formData, function(data) {
                         if(data.status.includes('true')){
                             
                         }else if(data.status.includes('no-asigned')){
@@ -270,7 +281,7 @@
                     request.onreadystatechange = function() {
                         if (request.readyState == 4 && request.status == 200) {
                             if( typeof callback === 'function' ){
-                                callback(request.responseText);
+                                callback(JSON.parse(request.responseText));
                             }
                         }
                     };
@@ -313,6 +324,57 @@
                 window.onbeforeunload = function() {
                     document.querySelector('#start-recording').disabled = false;
                 };
+            }
+
+            function intiSlides(){
+                
+                Reveal.initialize({
+                    controls: true,
+                    progress: true,
+                    history: true,
+                    center: true,
+
+                    transition: 'fade',
+
+                    dependencies: [{
+                            src: '../assets/lib/js/classList.js',
+                            condition: function() {
+                                return !document.body.classList;
+                            }
+                        },
+                        {
+                            src: '../assets/plugin/markdown/marked.js',
+                            condition: function() {
+                                return !!document.querySelector('[data-markdown]');
+                            }
+                        },
+                        {
+                            src: '../assets/plugin/markdown/markdown.js',
+                            condition: function() {
+                                return !!document.querySelector('[data-markdown]');
+                            }
+                        },
+                        {
+                            src: '../assets/plugin/highlight/highlight.js',
+                            async: true,
+                            callback: function() {
+                                hljs.initHighlightingOnLoad();
+                            }
+                        },
+                        {
+                            src: '../assets/plugin/search/search.js',
+                            async: true
+                        },
+                        {
+                            src: '../assets/plugin/zoom-js/zoom.js',
+                            async: true
+                        },
+                        {
+                            src: '../assets/plugin/notes/notes.js',
+                            async: true
+                        }
+                    ]
+                });
             }
         });
     </script>

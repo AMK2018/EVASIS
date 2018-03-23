@@ -1077,6 +1077,18 @@ button:active,
 .list li div svg:hover{
     color: #8ebebc; 
 }
+
+.list li div .score{    
+    position: relative;
+    left: -80px;
+    color:#6675ff;
+}
+
+.list li div video{
+    width: 20%;
+    position: relative;
+    left: 80px;
+}
 /* Wide */
 
 @media screen and (min-width: 961px) and (max-width: 1880px) {

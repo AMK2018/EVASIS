@@ -11,7 +11,7 @@
     $count = mysqli_num_rows($q);
 
     if($count <= 0){
-    	$query = mysqli_query($con, "INSERT INTO asignaciones (idUsuario, idEvaluacion, fecha_asign, status) VALUES($iduser, $eva, '$fecha', 'Incomplete')")or die(mysqli_error($con));
+    	$query = mysqli_query($con, "INSERT INTO asignaciones (idUsuario, idEvaluacion, fecha_asign, score, status, media) VALUES($iduser, $eva, '$fecha', '', 'Incomplete', '')")or die(mysqli_error($con));
 
     	if($query){
             echo "true"; 
