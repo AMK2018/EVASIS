@@ -294,7 +294,7 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                         var split = id.split('-');
                         var info = users[split[2]];
                         var json = JSON.stringify(info);
-                        openPopupPage("../eva/index.php", json);
+                        openPopupPage("../../eva/index.php", json);
                     });
                     break;
                 case 3:

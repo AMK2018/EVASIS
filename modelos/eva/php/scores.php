@@ -12,8 +12,7 @@
     }else{
         $status = "Failed";
     }
-
-
+    
     #init saving video
         if (!isset($_POST['audio-filename']) && !isset($_POST['video-filename'])) {
             echo 'PermissionDeniedError';
@@ -68,5 +67,5 @@
     }
     
     echo(json_encode($response));
-
+    
 ?>

@@ -117,10 +117,23 @@
             var idUser = "<?php echo $id; ?>";
             var idEva = json.idEva;
             var date = json['asign-date'];
+        
+            switch(idUser){
+                case "1":
+                    getQtns("php/qtns.php", json.theme);
+                break;
+                case "2":
+                    if(date != null && date != "" && date != undefined){
+                        date = myDate(date);
+                        checkEvaDone(idUser, idEva, date);
+                    }
+                break;
+                case "3":
+                    getQtns("php/qtns.php", json.theme);
+                break;
+            }
             
-            date = myDate(date);
-            
-            if(date != null){
+            function checkEvaDone(idUser, idEva, date){
                 $.post("php/check.php",{iduser:idUser, ideva:idEva, date:date}, function (data) {
                     if (data.status.includes('true')) {
                         if(data.stuff.status == "Incomplete"){
@@ -144,7 +157,7 @@
                 }).fail(function (xhr, status, error) {
                     alert("Error intenta de nuevo...");
                 }).always(function () {
-                    myDate(date, "YYMMDD");
+                    
                 });
             }
 
@@ -187,18 +200,13 @@
                 }).always(function () {
                     if(questions != undefined ){
                         if(json.num < questions.length){
-                            $(".lblNum").text(json.num);
-                            for (var i = 0; i < json.num; i++) {
-                                var pregunta = questions[i].pregunta;
-                                $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</section>');
-                            }
+                            createSlides(questions, json.num, json.type);
+
+                            intiSlides();
+
+                            initVideoRecorder(questions);
                         }else{
-                            $(".lblNum").text(questions.length);
-                            for (var i = 0; i < questions.length; i++) {
-                                var pregunta = questions[i].pregunta;
-                                $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'"/></section>');
-                            }
-                            $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
+                            createSlides(questions, questions.lenth, json.type);
                             
                             intiSlides();
 
@@ -206,6 +214,23 @@
                         }
                     }
                 });
+            }
+
+            function createSlides(questions, num, type){
+                switch(type){
+                    case "Cuestionario":
+                        $(".lblNum").text(num);
+                        for (var i = 0; i < questions.length; i++) {
+                            var pregunta = questions[i].pregunta;
+                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><input type="text" name="p'+i+'"/></section>');
+                        }
+                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
+                    break;
+                    case "Relacion de Columnas":
+                    break;
+                    case "Opcion Multiple":
+                    break;    
+                }
             }
             
             //record video functions
@@ -267,7 +292,7 @@
 
                     makeXMLHttpRequest('php/scores.php', formData, function(data) {
                         if(data.status.includes('true')){
-                            
+                            window.close();
                         }else if(data.status.includes('no-asigned')){
                             alert("Esta evaluación no ha sido asignada a este usuario, los datos no se guardaran");
                         }else{
