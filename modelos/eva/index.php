@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="../assets/css/theme/moon.css">
     <link rel="stylesheet" href="css/modal.css">
     <link rel="stylesheet" href="css/form.css">
+    <link rel="stylesheet" href="css/dragula.css">
     <style type="text/css">
         #video-container {
             position: absolute;
@@ -90,6 +91,7 @@
     <script src="../assets/js/requests.js"></script>
     <script src="https://www.webrtc-experiment.com/MediaStreamRecorder.js">
     </script>
+    <script src="js/dragula.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {
@@ -206,7 +208,7 @@
 
                             initVideoRecorder(questions);
                         }else{
-                            createSlides(questions, questions.lenth, json.type);
+                            createSlides(questions, questions.length, json.type);
                             
                             intiSlides();
 
@@ -227,12 +229,60 @@
                         $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
                     break;
                     case "Relacion de Columnas":
+                        $(".slides").append("<section><h2>Relación de Columnas</h2><div class='col-container'><div id='l' class='left'></div><div id='r' class='right'></div></div><label class='res'>Respuestas</label><label class='pre'>Preguntas</label></section>");
+                        
+                        var left = $("section .col-container .left");
+                        var right = $("section .col-container .right");
+
+                        $(".lblNum").text(num);
+                        for (var i = 0; i < questions.length; i++) {
+                            var pregunta = questions[i].pregunta;
+                            right.append('<nav id="r-'+i+'">'+ pregunta +'</nav>');
+                            var respuesta = questions[i].respuesta;
+                            left.append("<nav>"+respuesta+"</nav>");
+                        }
+                        
+                        $(left).shuffleChildren();
+
+                        var drake = dragula([document.getElementById('l')], {
+                            revertOnSpill: true,
+                            accepts: function (el, target) {
+                                return target !== document.getElementById('l')
+                            }
+                        }).on('drop', function(el, container){
+                            var value = el.innerHTML;
+                            var id = $(container).attr("id")
+                            var index = id.split('-')[1];
+                            $("#"+id+" > input").remove();
+                            $(container).append("<input type='hidden' name='p"+index+"' value='"+value+"'/>");
+                        });
+                        
+                        $("section .col-container .right nav").each(function(){
+                            var id = $(this).attr("id");
+                            drake.containers.push(document.getElementById(id));
+                        });
+                        
+                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
                     break;
                     case "Opcion Multiple":
                     break;    
                 }
             }
             
+            $.fn.shuffleChildren = function() {
+                $.each(this.get(), function(index, el) {
+                    var $el = $(el);
+                    var $find = $el.children();
+
+                    $find.sort(function() {
+                        return 0.5 - Math.random();
+                    });
+
+                    $el.empty();
+                    $find.appendTo($el);
+                });
+            };
+
             //record video functions
             function initVideoRecorder(questions){
                  //video recorder
@@ -338,12 +388,14 @@
                 };
 
                 document.querySelector('#stopEvaRec').onclick = function() {
+                    if(date == undefined || date == "" || date == null){
+                        window.close();
+                    }
                     this.disabled = true;
                     console.log('Just stopped the recording');
                     mediaStream.getVideoTracks()[0].stop();
                     mediaRecorder.stop();
                     $(".controls").hide();
-                    //window.close();
                 };
 
                 window.onbeforeunload = function() {

@@ -1080,14 +1080,14 @@ button:active,
 
 .list li div .score{    
     position: relative;
-    left: -80px;
+    left: -50px;
     color:#6675ff;
 }
 
 .list li div video{
     width: 20%;
     position: relative;
-    left: 80px;
+    left: 50px;
 }
 /* Wide */
 
