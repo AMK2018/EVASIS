@@ -82,7 +82,7 @@
 							<p>
 								<ul class="icons">
 									<li>
-										<a href="preguntas/" target="_blank" class="icon fa-plus"><span class="label">Agregar evaluación</span></a>
+										<a href="preguntas.php" target="_blank" class="icon fa-plus"><span class="label">Agregar evaluación</span></a>
 										<li id="syncEvas">
 											<i class="icon fas fa-sync-alt"></i>
 										</li>

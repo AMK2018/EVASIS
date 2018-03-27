@@ -122,7 +122,7 @@
         
             switch(idUser){
                 case "1":
-                    getQtns("php/qtns.php", json.theme);
+                    getQtns("php/qtns.php", json.theme, json.type);
                 break;
                 case "2":
                     if(date != null && date != "" && date != undefined){
@@ -131,7 +131,7 @@
                     }
                 break;
                 case "3":
-                    getQtns("php/qtns.php", json.theme);
+                    getQtns("php/qtns.php", json.theme, json.type);
                 break;
             }
             
@@ -139,7 +139,7 @@
                 $.post("php/check.php",{iduser:idUser, ideva:idEva, date:date}, function (data) {
                     if (data.status.includes('true')) {
                         if(data.stuff.status == "Incomplete"){
-                            getQtns("php/qtns.php", json.theme);
+                            getQtns("php/qtns.php", json.theme, json.type);
                         }else{
                             $("#modal").removeClass("zoomIn");
                             $("#modal").addClass("zoomOut");
@@ -187,9 +187,9 @@
             }
 
             //call questions
-            function getQtns(path, tema){
+            function getQtns(path, tema, tipo){
                 var questions;
-                $.get(path,{theme:tema}, function (data) {
+                $.get(path,{theme:tema, type:tipo}, function (data) {
                     if (data.status.includes('true')) {
                        questions = data.stuff;
                     }else {
@@ -265,10 +265,34 @@
                         $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
                     break;
                     case "Opcion Multiple":
+                        $(".lblNum").text(num);
+
+                        for (var i = 0; i < questions.length; i++) {
+                            var pregunta = questions[i].pregunta;
+                            var res = questions[i].respuesta;
+                            var ress = "";
+                            for(var r = 0; r < res.length; r++){
+                                ress += "<i class='result' id='res-"+i+"-"+r+"'>"+res[r].respuesta+"</i>";
+                                $(document).on("click", "#res-"+i+"-"+r, function(){
+                                    $(".slides").append("<input type='hidden' value='"+$(this).text()+"' />");
+                                });
+                            }
+                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><div class="res-container" id="rc-'+i+'">'+ress+'</div></section>');
+                        }
+                        
+                        $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
                     break;    
                 }
             }
             
+            function initAnswers(){
+                $("section").find('.result').each(function(){
+                    $(this).click(function(){
+                        var val = $(this).text();
+                    });
+                });
+            }
+
             $.fn.shuffleChildren = function() {
                 $.each(this.get(), function(index, el) {
                     var $el = $(el);

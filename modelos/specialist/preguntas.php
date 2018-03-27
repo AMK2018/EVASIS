@@ -4,11 +4,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<title>Preguntas</title>
-	<link rel="stylesheet" type="text/css" href="../../assets/css/form.css">
-	<link rel="stylesheet" type="text/css" href="../../assets/css/main.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/form.css">
+	<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
 	<script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../assets/js/jquery.min.js"></script>
 </head>
 <body>
 	<?php 
@@ -71,7 +71,7 @@
 					<h2 class="alt"> <div class="animated fadeInLeft">GESTION</div><div class="animated fadeIn">DE</div><div class="animated fadeInRight">EVALUACIONES</div></h2>
 					<div class="animated fadeInUp delay-1">
                         <h3>Creación, Edición y Eliminación de evaluaciones.</h3>
-						<img src="../../images/books.svg" width="300">
+						<img src="../images/books.svg" width="300">
                     </div>
 				</header>
 			</div>
@@ -170,7 +170,7 @@
 					      </tbody>
 					    </table>
 					    <div class="loader">
-						    <img src="../../images/loading.svg">
+						    <img src="../images/loading.svg">
 						</div>
 					</div>
 				</div>
@@ -256,7 +256,7 @@
 						      </tbody>
 						    </table>
 						    <div class="loader">
-							    <img src="../../images/loading.svg">
+							    <img src="../images/loading.svg">
 							</div>
 						</div>
 					</div>
@@ -327,26 +327,26 @@
 		</section>
 	</div>
 
-	<script src="../../assets/js/jquery.min.js"></script>
-	<script src="../../assets/js/jquery.scrolly.min.js"></script>
-	<script src="../../assets/js/jquery.scrollzer.min.js"></script>
-	<script src="../../assets/js/skel.min.js"></script>
-	<script src="../../assets/js/util.js"></script>
-	<script src="../../assets/js/main.js"></script>
-	<script src="../../assets/js/requests.js"></script>
-	<script src="../../../js/animatedModal.js"></script>
+	<script src="../assets/js/jquery.min.js"></script>
+	<script src="../assets/js/jquery.scrolly.min.js"></script>
+	<script src="../assets/js/jquery.scrollzer.min.js"></script>
+	<script src="../assets/js/skel.min.js"></script>
+	<script src="../assets/js/util.js"></script>
+	<script src="../assets/js/main.js"></script>
+	<script src="../assets/js/requests.js"></script>
+	<script src="../../js/animatedModal.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function(){
             var tipo = '<?php echo $tipo;?>';
-			updateTable("../../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2, tipo);
-			updateTable("../../assets/php/temas.php", ".themeTable .tbl-content table", ".themeTable .tbl-content .loader", 3);
+			updateTable("../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2, tipo);
+			updateTable("../assets/php/temas.php", ".themeTable .tbl-content table", ".themeTable .tbl-content .loader", 3);
 			$("#gestionEva, #gestionTheme").css("display", "none");
-			$(".slctTema").fillData("../../assets/php/temas.php");
-			$(".slctTipo").fillData("../../assets/php/evaTypes.php");
-			$(".slctEva").getEvaluations("../../assets/php/evas.php");
+			$(".slctTema").fillData("../assets/php/temas.php");
+			$(".slctTipo").fillData("../assets/php/evaTypes.php");
+			$(".slctEva").getEvaluations("../assets/php/evas.php");
 
 			$("#add-evaluation footer .button").off("click").on("click", function(){
-				$("#add-evaluation footer form").addEva("../../assets/php/gestionEvas.php", "../../assets/php/");
+				$("#add-evaluation footer form").addEva("../assets/php/gestionEvas.php", "../../assets/php/");
 			});
 
 			var closeventEva = $(".btgeva").animatedModal({
@@ -394,8 +394,8 @@
 		                }
 					});
 
-			$(".slctTema").fillData("../../assets/php/temas.php");
-			$(".slctTipoEva").fillData("../../assets/php/evaTypes.php");
+			$(".slctTema").fillData("../assets/php/temas.php");
+			$(".slctTipoEva").fillData("../assets/php/evaTypes.php");
             
 			/*$(".slctEva").change(function(event) {
 				$(this).evaInfo("../../assets/php/getEva.php");
@@ -478,15 +478,15 @@
 				var tipo = $('.QSNSlctTipo :selected').text();;
 				var tema = $('.QSNSlctTema :selected').text();;
 
-				$("#add-questions footer form").addQuestions("../../assets/php/addQns.php", tipo, tema);
+				$("#add-questions footer form").addQuestions("../assets/php/addQns.php", tipo, tema);
 			});
 
 			$("#syncEvas").off("click").on("click", function(e){
-				updateTable("../../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2);
+				updateTable("../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2);
 			});
 
 			$("#syncThemes").off("click").on("click", function(e){
-				updateTable("../../assets/php/temas.php", ".themeTable .tbl-content table", ".themeTable .tbl-content .loader", 3);
+				updateTable("../assets/php/temas.php", ".themeTable .tbl-content table", ".themeTable .tbl-content .loader", 3);
 			});
 
 			$(".btAddEva").off("click").on("click", function(e){
@@ -494,10 +494,10 @@
 				var t = $(this).text()
 				switch(t){
 					case "Editar":
-						$("#gestionEva .modal-content form").editEva($(".txtidEva").val() ,"../../assets/php/gestionEvas.php", closeventEva,"../../assets/php/allEvas.php");
+						$("#gestionEva .modal-content form").editEva($(".txtidEva").val() ,"../assets/php/gestionEvas.php", closeventEva,"../assets/php/allEvas.php");
 					break;
 					case "Eliminar":
-						$("#gestionEva .modal-content form").deleteEva($(".txtidEva").val() ,"../../assets/php/gestionEvas.php", closeventEva,"../../assets/php/allEvas.php");
+						$("#gestionEva .modal-content form").deleteEva($(".txtidEva").val() ,"../assets/php/gestionEvas.php", closeventEva,"../assets/php/allEvas.php");
 					break;
 				}
 			});
@@ -507,13 +507,13 @@
 				var t = $(this).text()
 				switch(t){
 					case "Agregar":
-						$("#gestionTheme .modal-content form").addTheme("../../assets/php/gestionThemes.php", closeventEva);
+						$("#gestionTheme .modal-content form").addTheme("../assets/php/gestionThemes.php", closeventEva);
 					break;
 					case "Editar":
-						$("#gestionTheme .modal-content form").editTheme($(".txtidTheme").val(), "../../assets/php/gestionThemes.php", closeventEva);
+						$("#gestionTheme .modal-content form").editTheme($(".txtidTheme").val(), "../assets/php/gestionThemes.php", closeventEva);
 					break;
 					case "Eliminar":
-						$("#gestionTheme .modal-content form").deleteTheme($(".txtidTheme").val(), "../../assets/php/gestionThemes.php", closeventEva);
+						$("#gestionTheme .modal-content form").deleteTheme($(".txtidTheme").val(), "../assets/php/gestionThemes.php", closeventEva);
 					break;
 				}
 			});
