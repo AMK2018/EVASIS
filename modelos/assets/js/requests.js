@@ -96,6 +96,8 @@ var updateTable = function (path, table, loader, type, userType, idUser) {
                         $("#gestionAsign .modal-content form button").text("Eliminar");
 
                         $(".slctEva").getUserEvaluations("../assets/php/getAsigns.php", iduser);
+
+                        $(".txtiduser").val(iduser);    
                     });
 
                     var closasign = $('#unasign-' + users[i].id + '-' + i).animatedModal({
@@ -836,6 +838,31 @@ jQuery.fn.asignEva = function (path) {
         alert("Error intenta de nuevo...");
     }).always(function () {
     });
+}
+
+jQuery.fn.deleteEva = function (path) {
+    var form = $(this);
+
+    form.changeInputsState(false);
+    var fields = form.serializeArray();
+
+    if (validateFields(fields, 2)) {
+        $.post(path, {
+            fields: fields
+        }, function (data) {
+            if (data.includes("true")) {
+                alert("Asignación eliminada.");
+            } else {
+                alert("Hubo un error intente de nuevo mas tarde...");
+            }
+        }).done(function () {
+           
+        }).fail(function (xhr, status, error) {
+            alert("Error intenta de nuevo...");
+        }).always(function () {
+            
+        });
+    }
 }
 
 jQuery.fn.getUserEva = function (path, iduser, method) {

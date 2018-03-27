@@ -1,4 +1,3 @@
-<!DOCTYPE HTML>
 <html>
 	<head>
 		<title>Especialista</title>
@@ -411,7 +410,7 @@
 	                        	$("#gestionAsign .modal-content form").asignEva("../assets/php/asignEva.php");
 	                        break;
 	                        case "Eliminar":
-	                        	alert("deleted");
+							$("#gestionAsign .modal-content form").deleteEva("../assets/php/delEvaAsign.php");
 	                        break;
 	                    }
                 	});
