@@ -733,9 +733,68 @@ jQuery.fn.addQuestions = function (path, type, theme) {
         }).fail(function (xhr, status, error) {
             alert("Error intenta de nuevo...");
         }).always(function () {
-
+            $("#add-questions footer.eva form").empty();
         });
     }
+};
+
+jQuery.fn.getQuestions = function (path){
+    var table = ".QstnTable .tbl-content table";
+    var tbody = table + " tbody";
+    var loader = ".QstnTable .tbl-content .loader";
+    var questions;
+
+
+    $(table).hide();
+    $(loader).show();
+    
+    $.get(path, function (data) {
+        if (data.status.includes("true")) {
+           questions = data.stuff;
+        } else {
+            alert(data.msg);
+        }
+    }, 'json').done(function () {
+        $(loader).hide();
+        $(table).show();
+    }).fail(function (xhr, status, error) {
+        alert("Error intenta de nuevo...");
+    }).always(function () {
+        $(tbody).empty();
+        for(var i = 0; i < questions.length; i++){
+            var p = questions[i].pregunta;
+            var r = questions[i].respuesta;
+            var respuestas = "";
+            for(var j = 0; j < r.length; j++){
+                respuestas += r[j].respuesta + ",";
+            }
+            var actions = "<tr><td>"+p+"</td><td>"+respuestas+"</td><td>"+questions[i].tema+"</td><td>"+questions[i].tipo+"</td><td class='actions'><ul class='icons'><li><a class='icon fa-minus' id='qstn-"+questions[i].idPregunta+"'><span class='label'>Ver</span></a></li></ul></td></tr>";
+
+            $(tbody).on("click", "#qstn-"+i, function(){
+                var C = confirm("Estas seguro que deseas eliminar esta pregunta?");
+                if (C == true) {
+                    var id = $(this).attr('id').split('-')[1];
+                    $.post("../assets/php/delQstn.php", {
+                        idPregunta: id
+                    }, function (data) {
+                        if (data.includes("true")) {
+                            alert("Pregunta eliminada exitosamente");
+                        } else {
+                            alert("Hubo un error intente de nuevo mas tarde...");
+                        }
+                    }).done(function () {
+            
+                    }).fail(function (xhr, status, error) {
+                        alert("Error intenta de nuevo...");
+                    }).always(function () {
+                        $(".QstnTable").getQuestions(path);
+                    });
+                } 
+            });
+
+            $(tbody).append(actions);
+        }
+    });
 };
 
 jQuery.fn.addTheme = function (path, close) {

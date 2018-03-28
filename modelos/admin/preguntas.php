@@ -41,6 +41,7 @@
 						<li><a href="#themes" id="themes-link" class="skel-layers-ignoreHref"><span class="icon fa-graduation-cap">Temas</span></a></li>
 						<li><a href="#add-evaluation" id="add-evaluation-link" class="skel-layers-ignoreHref"><span class="icon fa-plus-square">Crear Evaluación</span></a></li>
 						<li><a href="#add-questions" id="add-questions-link" class="skel-layers-ignoreHref"><span class="icon fa-plus-square">Crear Preguntas</span></a></li>
+						<li><a href="#questions" id="questions-link" class="skel-layers-ignoreHref"><span class="icon fa-question">Preguntas</span></a></li>
 					</ul>
 				</nav>
 
@@ -325,6 +326,41 @@
 				</footer>
 			</div>
 		</section>
+
+		<section id="questions" class="two biggerpage">
+			<div class="container">
+				<header class="animated fadeInDown">
+					<h2>Preguntas</h2>
+				</header>
+				<footer class="animated fadeInUp">
+					<div class="QstnTable">
+						<div class="tbl-header">
+						    <table cellpadding="0" cellspacing="0" border="0">
+						      <thead>
+						        <tr>
+						          <th>Pregunta</th>
+						          <th>Respuestas</th>
+								  <th>Tema</th>
+						          <th>Tipo</th>
+								  <th>Acción</th>
+						        </tr>
+						      </thead>
+						    </table>
+						</div>
+						<div class="tbl-content" style="height: 500px !important;">
+						    <table cellpadding="0" cellspacing="0" border="0">
+						      <tbody>
+						        
+						      </tbody>
+						    </table>
+						    <div class="loader">
+							    <img src="../images/loading.svg">
+							</div>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</section>
 	</div>
 
 	<script src="../assets/js/jquery.min.js"></script>
@@ -340,6 +376,9 @@
             var tipo = '<?php echo $tipo;?>';
 			updateTable("../assets/php/allEvas.php", ".evaTable .tbl-content table", ".evaTable .tbl-content .loader", 2, tipo);
 			updateTable("../assets/php/temas.php", ".themeTable .tbl-content table", ".themeTable .tbl-content .loader", 3);
+			
+			$(".QstnTable").getQuestions("../assets/php/getQstns.php");
+
 			$("#gestionEva, #gestionTheme").css("display", "none");
 			$(".slctTema").fillData("../assets/php/temas.php");
 			$(".slctTipo").fillData("../assets/php/evaTypes.php");
@@ -427,15 +466,15 @@
                                 "<label>Pregunta "+(n + 1)+"</label>"+
                             "</div>" +
                             "<div id='r' class='field'>"+
-                                "<input placeholder='Respuesta 1' type='Text' name='p"+(n + 1)+"-r1'>"+
+                                "<input placeholder='Respuesta 1 - Correcta' type='Text' name='p"+(n + 1)+"-r1'>"+
                                 "<label>Respuesta 1</label>" +
                             "</div>"+
                             "<div id='r' class='field'>"+
-                                "<input placeholder='Respuesta 2' type='Text' name='p"+(n + 1)+"-r2'>"+
+                                "<input placeholder='Respuesta 2 - Incorrecta' type='Text' name='p"+(n + 1)+"-r2'>"+
                                 "<label>Respuesta 2</label>"+
                             "</div>"+
                             "<div id='r' class='field'>"+
-                                "<input placeholder='Respuesta 3' type='Text' name='p"+(n + 1)+"-r3'>"+
+                                "<input placeholder='Respuesta 3 - Incorrecta' type='Text' name='p"+(n + 1)+"-r3'>"+
                                 "<label>Respuesta 3</label>"+
                             "</div>"+
                         "</div>";

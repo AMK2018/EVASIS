@@ -274,23 +274,21 @@
                             for(var r = 0; r < res.length; r++){
                                 ress += "<i class='result' id='res-"+i+"-"+r+"'>"+res[r].respuesta+"</i>";
                                 $(document).on("click", "#res-"+i+"-"+r, function(){
-                                    $(".slides").append("<input type='hidden' value='"+$(this).text()+"' />");
+                                    var parent =  $(this).parent().parent();
+                                    var input = parent.find($("input"));
+
+                                    input.val($(this).text());
+                                    parent.find("label").text(" = " + input.val());
                                 });
                             }
-                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'</br><div class="res-container" id="rc-'+i+'">'+ress+'</div></section>');
+                            $(".slides").append('<section><h2>Pregunta ' + (i + 1) + '</h2></br>'+ pregunta +'<label></label></br><div class="res-container" id="rc-'+i+'">'+ress+'</div><input type="hidden" class="val-'+i+'" name="res-'+i+'-'+r+'"/></section>');
+
+                            $(".res-container").shuffleChildren();
                         }
                         
                         $(".slides").append('<section><h2> FELICIDADES TERMINASTE TU EVALUACIÓN</h2><label id="stopEvaRec" style="cursor:pointer;">Salir</label></section>');
                     break;    
                 }
-            }
-            
-            function initAnswers(){
-                $("section").find('.result').each(function(){
-                    $(this).click(function(){
-                        var val = $(this).text();
-                    });
-                });
             }
 
             $.fn.shuffleChildren = function() {
@@ -394,7 +392,7 @@
                     $.map(formarray,  function (val, index) {  
                         var answ = qtns[index].respuesta;
                         var v = val.value;
-                        if(v == answ){
+                        if(v == answ[0].respuesta){
                             score++;
                         }
                     });
@@ -412,9 +410,9 @@
                 };
 
                 document.querySelector('#stopEvaRec').onclick = function() {
-                    if(date == undefined || date == "" || date == null){
+                    /*if(date == undefined || date == "" || date == null){
                         window.close();
-                    }
+                    }*/
                     this.disabled = true;
                     console.log('Just stopped the recording');
                     mediaStream.getVideoTracks()[0].stop();
