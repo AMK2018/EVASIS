@@ -1,5 +1,5 @@
 <?php 
-
+    ob_start();
 	session_start();
     if(isset($_POST['info'])){
 	   $info = $_POST['info'];
@@ -50,7 +50,6 @@
 </head>
 
 <body>
-
     <div id="video-container">
         <video id="video"></video>
     </div>
@@ -111,7 +110,7 @@
                 "</ul>" +
                 "</section>");
 
-            $(".lblTitle").text(json.titulo);
+            $(".lblTitle").text(json.title);
             $(".lblDate").text(json.date);
             $(".lblTheme").text(json.theme);
             $(".lblType").text(json.type);
@@ -480,3 +479,5 @@
 </body>
 
 </html>
+
+<?php ob_end_flush();?>

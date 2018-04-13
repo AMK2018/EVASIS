@@ -1,3 +1,4 @@
+<?php ob_start(); session_start();?>
 <html>
 	<head>
 		<title>Especialista</title>
@@ -10,8 +11,6 @@
 	</head>
 	<body>
 		<?php 
-
-			session_start();
 			if(isset($_SESSION['username']) || isset($_SESSION['tipo'])){
 				$name = $_SESSION['username'];
 				$tipo = $_SESSION['tipo'];			
@@ -431,3 +430,4 @@
 			</script>
 	</body>
 </html>
+<?php ob_end_flush();?>

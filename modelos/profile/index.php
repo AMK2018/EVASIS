@@ -1,5 +1,5 @@
 <?php 
-
+    ob_start();
 	session_start();
     if(isset($_POST['info'])){
 	   $info = $_POST['info'];
@@ -18,11 +18,11 @@
 
 <html>
 
-<head>
+<head><meta http-equiv="Content-Type" content="text/html; charset=gb18030">
     <title>
         
     </title>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    
     <meta name="description" content="" />
     <meta name="keywords" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -138,3 +138,4 @@
 </body>
 
 </html>
+<?php ob_end_flush();?>

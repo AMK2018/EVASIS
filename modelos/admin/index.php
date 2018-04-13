@@ -1,3 +1,4 @@
+<?php ob_start(); session_start();?>
 <!DOCTYPE HTML>
 <html>
 
@@ -13,8 +14,6 @@
 
 <body>
     <?php 
-
-			session_start();
 			if(isset($_SESSION['username']) || isset($_SESSION['tipo'])){
 				$name = $_SESSION['username'];
 				$tipo = $_SESSION['tipo'];			
@@ -450,3 +449,5 @@
 </body>
 
 </html>
+
+<?php ob_end_flush();?>

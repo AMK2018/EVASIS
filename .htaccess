@@ -1,0 +1,24 @@
+
+RewriteEngine on
+
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://eva.amicus-marketing.com/$1 [L,R]
+
+RewriteCond %{HTTP_HOST} ^example.com [NC]
+RewriteRule ^(.*)$ http://www.example.com/$1 [R=301,L]
+
+RewriteRule .*\.()$ - [F,NC]
+
+RewriteRule .*\.()$ - [F,NC]
+
+Options -Indexes
+
+RewriteEngine on 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME}\.php -f 
+RewriteRule ^(.*)$ $1.php
+
+RewriteEngine on 
+RewriteCond %{REQUEST_FILENAME} !-d 
+RewriteCond %{REQUEST_FILENAME}\.html -f 
+RewriteRule ^(.*)$ $1.html

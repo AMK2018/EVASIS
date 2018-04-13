@@ -1,8 +1,9 @@
+<?php ob_start(); session_start();?>
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head><meta http-equiv="Content-Type" content="text/html; charset=euc-jp">
 	<title>EVASIS Login</title>
-	<meta charset="UTF-8">
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->	
 	<link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
@@ -28,26 +29,22 @@
 <!--===============================================================================================-->
 </head>
 <body style="background-color: #666666;">
-	<?php 
-
-			session_start();
-			
-			if(isset($_SESSION['username']) || isset($_SESSION['tipo'])){
-				$name = $_SESSION['username'];
-				$tipo = $_SESSION['tipo'];			
-			
-				switch($tipo){
-					case "Administrador":
-						header("location: modelos/admin/");
-					break;
-					case "Estudiante":
-						header("location: modelos/student/");
-					break;
-					case "Especialista":
-						header("location: modelos/specialist/");
-					break;
-				}
+	<?php
+		if(isset($_SESSION['username']) || isset($_SESSION['tipo'])){
+			$name = $_SESSION['username'];
+			$tipo = $_SESSION['tipo'];		
+			switch($tipo){
+				case "Administrador":
+					header("location: modelos/admin/");
+				break;
+				case "Estudiante":
+					header("location: modelos/student/");
+				break;
+				case "Especialista":
+					header("location: modelos/specialist/");
+				break;
 			}
+		}
 	?>
 	<div class="limiter">
 		<div class="container-login100">
@@ -135,3 +132,4 @@
 
 </body>
 </html>
+<?php ob_end_flush();?>

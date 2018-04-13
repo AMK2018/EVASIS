@@ -1,9 +1,10 @@
+<?php ob_start(); session_start();?>
 <!DOCTYPE HTML>
 <html>
 
-<head>
+<head><meta http-equiv="Content-Type" content="text/html; charset=gb18030">
     <title>Estudiante</title>
-    <meta charset="utf-8" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
@@ -14,8 +15,6 @@
 
 <body>
     <?php 
-
-			session_start();
 			if(isset($_SESSION['username']) || isset($_SESSION['tipo'])){
 				$name = $_SESSION['username'];
 				$tipo = $_SESSION['tipo'];
@@ -119,3 +118,4 @@
 </body>
 
 </html>
+<?php ob_end_flush();?>
